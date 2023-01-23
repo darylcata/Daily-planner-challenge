@@ -23,7 +23,7 @@ https://github.com/darylcata/Daily-planner-challenge
 
 LIVE PAGE:
 
-
+https://darylcata.github.io/Daily-planner-challenge/
 
 ## License
 MIT
