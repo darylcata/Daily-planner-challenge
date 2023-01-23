@@ -1,7 +1,11 @@
 // to show the current date
-var todaysDate = moment("5PM","hA");
+var todaysDate = moment("12PM","hA");
 var todaysTime = todaysDate.format("hA");
 $("#currentDay").text(todaysDate.format("dddd, MMMM Do"));
+
+
+var saveBtn;
+var currentTimeIndex;
 
 //assign variable to div class = 'container' to create timeblocks
 var planner = $('.container');
@@ -17,7 +21,7 @@ var workHours = [
     "5PM"
 ];
 
-//function to display working hours the input and save button
+//function to display working hours, the input and save button
 function getWorkHours() {
 
     for (var i = 0; i < workHours.length; i++) {
@@ -29,14 +33,18 @@ function getWorkHours() {
         var timeEl = $('<div>');
         timeEl.attr('class', 'col-lg-1 col-md-1 hour');
         timeEl.text(workHours[i]);
-
+        var currentTimeIndex = workHours.indexOf(todaysTime)
         //create a column for text area, where user inputs on calendar
         var textInput = $('<textarea>');
         textInput.attr('class', 'col-lg-10 col-md-10');
         //checks for current time
-        if (todaysTime === workHours[i]) {
+        if (currentTimeIndex === workHours.indexOf(workHours[i])) {
             textInput.addClass('present');
-            }
+        } else if (currentTimeIndex > workHours.indexOf(workHours[i])) {
+           textInput.addClass('past');
+        }else if (currentTimeIndex < workHours.indexOf(workHours[i])) {
+            textInput.addClass('future')
+        }
         
         //create a save button
         var saveButton = $('<button>');
@@ -47,15 +55,30 @@ function getWorkHours() {
         rowDiv.append(textInput);
         rowDiv.append(saveButton);
         planner.append(rowDiv);
-
-        
-        
     }
 }
 
+var taskInput = $('textarea')
+var storedTask= localStorage.getItem('savedTasks');
+var task;
 
+function saveTask(event){
+    event.preventDefault();
+    var task = $('textarea').val();
+    localStorage.setItem("savedTasks", task);
+    displayTasks();
+}
+
+function displayTasks(){
+    taskInput.text(storedTask)
+}
+
+displayTasks();
 
 console.log(todaysTime)
 
 //runs when the page loads up
 getWorkHours();
+
+//this event listener runs when user wants to save a task
+$('button').on('click',saveTask)
